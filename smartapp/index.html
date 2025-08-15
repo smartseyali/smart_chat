@@ -3,11 +3,13 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/src/assets/logo.png" />
+  <link rel="icon" type="image/png" href="/logo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
@@ -26,7 +28,6 @@
   <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="/plugins/summernote/summernote-bs4.min.css">
-  <link rel="stylesheet" href="/src/styles/loader.css">
 
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
   <link rel="stylesheet"
@@ -36,18 +37,19 @@
 </head>
 
 <body class="hold-transition layout-fixed layout-navbar-fixed sidebar-mini sidebar-collapse">
-  <div id="root">
+  <div id="root"></div>
 
-  </div>
   <div id="overlay">
     <div class="cv-spinner"><span class="loader"></span><br /></div>
   </div>
+
+  <!-- This is the only React/Vite entry script -->
   <script type="module" src="/src/main.jsx"></script>
+
   <!-- jQuery -->
   <script src="/plugins/jquery/jquery.min.js"></script>
-  <!-- jQuery UI 1.11.4 -->
+  <!-- jQuery UI -->
   <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
-  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
   <script>
     $.widget.bridge('uibutton', $.ui.button)
   </script>
@@ -71,7 +73,9 @@
   <script src="/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- AdminLTE App -->
   <script src="/dist/js/adminlte.js"></script>
+  <!-- SweetAlert2 -->
   <script src="/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+  <!-- jQuery Query Builder -->
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-QueryBuilder/2.6.2/js/query-builder.standalone.min.js"></script>
 
