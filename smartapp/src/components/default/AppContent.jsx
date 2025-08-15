@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import routes from "../../Routes";
+import routes from "../../routes";
 
 export default class AppContent extends Component {
   render() {
