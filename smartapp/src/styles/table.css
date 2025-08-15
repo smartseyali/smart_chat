@@ -1,0 +1,56 @@
+/* Professional Bootstrap Table Theme */
+.table-custom {
+    background-color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.table-custom thead {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.table-custom thead th {
+    border-bottom: 2px  #fefefe;
+    padding: 0.75rem 1rem;
+}
+
+.table-custom tbody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+.table-custom tbody tr:nth-child(even) {
+    background-color: #fdfdfd;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.table-custom td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px  #fbfcfd;
+}
+
+.table-custom th {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+}
+
+.table-custom .table-primary {
+    background-color: #e9f5ff;
+}
+
+.table-custom .table-danger {
+    background-color: #fff5f5;
+}
+
+.table-custom .table-success {
+    background-color: #f4fff7;
+}

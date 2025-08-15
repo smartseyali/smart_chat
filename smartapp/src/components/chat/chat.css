@@ -1,0 +1,9 @@
+.chat-bubble {
+    position: relative;
+    word-break: break-word;
+}
+
+.bg-primary .fa-check-double {
+    color: #34b7f1 !important;
+    /* Seen (blue) */
+}
