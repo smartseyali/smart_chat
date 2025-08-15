@@ -1,4 +1,4 @@
-import React from "react";
+import logoImg from "../../assets/logo.png";
 import { NavLink } from "react-router-dom";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -59,7 +59,7 @@ const AppSidebar = ({
       >
         <a href="/" className="brand-link">
           <img
-            src="/src/assets/logo.png"
+            src={logoImg}
             alt="SmartChat Logo"
             className="brand-image img-circle elevation-3"
             style={{ opacity: ".8" }}

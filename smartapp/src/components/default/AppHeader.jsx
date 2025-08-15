@@ -1,38 +1,9 @@
-import React from "react";
-// import { useAuth } from "../../auth/useAuth";
-// import { useNavigate } from "react-router-dom";
-// import $ from "jquery";
+import logoImg from "../../assets/logo.png";
 
 const AppHeader = () => {
-  // const { logout } = useAuth();
-  // const navigate = useNavigate();
-
-  // const handleLogout = () => {
-  //   $("#overlay").show(); // Show loader
-  //   setTimeout(() => {
-  //     logout();
-  //     $("#overlay").hide();
-  //     navigate("/login", { replace: true });
-  //   }, 1000); // Redirect to login page
-  // };
   return (
     <div>
       <nav className="main-header navbar navbar-expand  navbar-light">
-        {/* Left navbar links */}
-        {/* <ul className="navbar-nav">
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-widget="pushmenu"
-              href="#"
-              role="button"
-            >
-              <i className="fas fa-bars" />
-            </a>
-          </li>
-        </ul> */}
-
-        {/* Right navbar links */}
         <ul className="navbar-nav ml-auto">
           <li className="nav-item dropdown mr-4">
             <a className="nav-link" data-toggle="dropdown" href="#">
@@ -43,7 +14,7 @@ const AppHeader = () => {
           <li className="nav-item">
             <a data-toggle="dropdown" href="#">
               <img
-                src="/src/assets/logo.png"
+                src={logoImg}
                 alt="Profile"
                 className="brand-image img-circle elevation-1"
                 style={{ opacity: "1", width: "40px", height: "40px" }}
@@ -60,13 +31,8 @@ const AppHeader = () => {
 
               <div className="dropdown-divider" />
               <a href="#" className="dropdown-item">
-                <i className="fas fa-key mr-2" /> Change Password
+                <i className="fas fa-lock mr-2" /> Change Password
               </a>
-
-              {/* <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item" onClick={handleLogout}>
-                <i className="fas fa-sign-out-alt mr-2" /> Log Out
-              </a> */}
             </div>
           </li>
         </ul>
