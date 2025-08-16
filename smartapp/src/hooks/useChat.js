@@ -82,7 +82,7 @@ const useChat = () => {
     };
 
     const resp = await sendWhatsappMessage("685001508038397", messageData);
-
+    if (resp === null) return;
     await database.post("messages", {
       conversation_id: selectedConv.id,
       org_id: selectedConv.org_id,

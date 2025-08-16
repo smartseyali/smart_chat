@@ -1,6 +1,7 @@
 import axios from "axios";
 import { database } from "./SupabaseService";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const API_BASE_URL = import.meta.env.VITE_WHATSAPP_API_URL;
 
@@ -45,10 +46,9 @@ const apiService = axios.create({
 // Request interceptor
 apiService.interceptors.request.use(
   async (config) => {
-    const token = localStorage.getItem("access_token") || (await fetchToken());
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    const { access_token } = useSelector((state) => state.auth);
+    const token = access_token ? access_token : await fetchToken();
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)

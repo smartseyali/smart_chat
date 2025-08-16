@@ -1,26 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabaseAuth, database } from "../services/SupabaseService";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../store/authslice";
 import Swal from "sweetalert2";
 import $ from "jquery";
 const useLogin = () => {
   const navigate = useNavigate();
   const [input, setInput] = useState({ username: "", password: "" });
+  const dispatch = useDispatch();
 
   const handleSignIn = async () => {
     $("#overlay").show(); // Show loader
     supabaseAuth
       .signin(input.username, input.password)
-      .then(({ data }) => {
-        console.log("Login successful:", data);
+      .then(({ user }) => {
         database
           .get("waba_accounts", { status: "active" })
           .then((data) => {
-            localStorage.setItem("waba_id", data[0]?.waba_id || "");
-            localStorage.setItem("app_id", data[0]?.app_id || "");
-            localStorage.setItem("app_secret", data[0]?.app_secret || "");
-            localStorage.setItem("access_token", data[0]?.access_token || "");
-            localStorage.setItem("verify_token", data[0]?.verify_token || "");
+            dispatch(
+              setAuth({
+                user: user.email,
+                waba_id: data[0]?.waba_id || "",
+                app_id: data[0]?.app_id || "",
+                app_secret: data[0]?.app_secret || "",
+                access_token: data[0]?.access_token || "",
+                verify_token: data[0]?.verify_token || "",
+              })
+            );
           })
           .catch((error) => {
             Swal.fire({
@@ -90,12 +97,21 @@ const useLogin = () => {
       });
   };
 
+  const handleSignOut = () => {
+    $("#overlay").show();
+    supabaseAuth.signout();
+    $("#overlay").hide();
+    dispatch(setAuth({}));
+    navigate("/", { replace: true });
+  };
+
   return {
     input,
     handleInputChange,
     handleSignIn,
     handleSignup,
     handleFacebookLogin,
+    handleSignOut,
   };
 };
 export default useLogin;

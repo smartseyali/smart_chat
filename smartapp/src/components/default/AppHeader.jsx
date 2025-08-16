@@ -1,6 +1,10 @@
 import logoImg from "../../assets/logo.png";
+import { useSelector } from "react-redux";
+import useLogin from "../../hooks/useLogin";
 
 const AppHeader = () => {
+  const { user } = useSelector((state) => state.auth);
+  const { handleSignOut } = useLogin();
   return (
     <div>
       <nav className="main-header navbar navbar-expand  navbar-light">
@@ -23,15 +27,16 @@ const AppHeader = () => {
             <div className="dropdown-menu dropdown-menu-md dropdown-menu-right">
               <a
                 className="dropdown-header text-center"
-                style={{ fontSize: "1.4rem" }}
+                style={{ fontSize: "1.1rem" }}
               >
-                <i className="fas fa-user-circle mr-2" />
-                <strong>Admin</strong>
+                <i className="fas fa-user-circle mr-2 " />
+                <strong>{user}</strong>
               </a>
 
               <div className="dropdown-divider" />
-              <a href="#" className="dropdown-item">
-                <i className="fas fa-lock mr-2" /> Change Password
+              <a className="dropdown-item" onClick={handleSignOut}>
+                <i className="fas fa-sign-out-alt mr-2" />
+                Sign Out
               </a>
             </div>
           </li>
