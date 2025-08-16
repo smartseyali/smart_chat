@@ -3,13 +3,7 @@ import logoImg from "../assets/logo.png";
 import useLogin from "../hooks/useLogin";
 
 const Login = () => {
-  const {
-    input,
-    handleInputChange,
-    handleSignIn,
-    handleSignup,
-    handleFacebookLogin,
-  } = useLogin();
+  const { input, handleInputChange, handleSignIn, handleSignup } = useLogin();
 
   return (
     <div className="container">
@@ -76,7 +70,7 @@ const Login = () => {
           </span>
           <hr className="flex-grow-1" />
         </div>
-        <div className="login-social">
+        {/* <div className="login-social">
           <button
             type="button"
             className="btn btn-primary btn-facebook"
@@ -85,7 +79,7 @@ const Login = () => {
             <span className="fab fa-facebook mr-3" />
             Log in with Facebook
           </button>
-        </div>
+        </div> */}
       </div>
       {/* Illustration Panel */}
       <div className="illustration-panel">
