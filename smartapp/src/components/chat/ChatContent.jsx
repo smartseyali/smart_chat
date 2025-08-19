@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { formatDateLabel, formatTimeLabel } from "../../utility/datetimeFormat";
 
 export default function ChatContent({ messages }) {
+  const bottomRef = useRef(null);
+  useEffect(() => {
+    // Scroll to bottom whenever messages change
+    bottomRef.current?.scrollIntoView({ behavior: "auto" });
+  }, [messages]);
   // Group messages by date
   const groupedMessages = messages
     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
@@ -35,10 +40,7 @@ export default function ChatContent({ messages }) {
   };
 
   return (
-    <div
-      className="card-body  overflow-auto p-3"
-      style={{ height: "calc(100vh - 250px)" }}
-    >
+    <div className="card-body overflow-auto p-3 chat-container">
       {Object.keys(groupedMessages).map((date, idx) => (
         <div key={idx}>
           {/* Date Separator */}
@@ -66,20 +68,123 @@ export default function ChatContent({ messages }) {
               }`}
             >
               <div
-                style={{
-                  background:
-                    msg.status != "received" ? "#dcf8c6" : "#d5effcff",
-                  padding: "8px 12px",
-                  borderRadius: "10px",
-                  maxWidth: "60%",
-                  boxShadow: "0px 1px 2px rgba(0,0,0,0.1)",
-                }}
+                className={`chat-bubble ${
+                  msg.status != "received" ? "me" : "other"
+                } p-2`}
               >
-                <div className="text-sm">{msg.body}</div>
-                <div
-                  className="d-flex align-items-center justify-content-end"
-                  style={{ fontSize: "10px", marginTop: "4px", color: "#999" }}
-                >
+                {/* Content by type */}
+                {(!msg.type || msg.type === "text") && (
+                  <div className="text-sm" style={{ whiteSpace: "pre-wrap" }}>
+                    {msg.body}
+                  </div>
+                )}
+                {msg.type === "template" && (
+                  <div>
+                    <div className="text-sm" style={{ whiteSpace: "pre-wrap" }}>
+                      {msg.payload?.template_preview?.bodyText || msg.body}
+                    </div>
+                    {msg.payload?.template_preview?.footerText && (
+                      <small className="text-muted d-block mt-1">
+                        {msg.payload.template_preview.footerText}
+                      </small>
+                    )}
+                    {Array.isArray(msg.payload?.template_preview?.buttons) &&
+                      msg.payload.template_preview.buttons.length > 0 && (
+                        <div className="mt-2">
+                          {msg.payload.template_preview.buttons.map(
+                            (btn, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                className={`btn btn-xs ${
+                                  btn.type === "URL"
+                                    ? "btn-outline-primary"
+                                    : btn.type === "PHONE_NUMBER"
+                                    ? "btn-outline-success"
+                                    : "btn-light"
+                                } mr-2`}
+                                disabled
+                              >
+                                {btn.text}
+                              </button>
+                            )
+                          )}
+                        </div>
+                      )}
+                  </div>
+                )}
+                {msg.type === "image" && (
+                  <div>
+                    {msg.media_url ? (
+                      <img
+                        src={msg.media_url}
+                        alt={msg.file_name || "image"}
+                        className="img-fluid rounded mb-1"
+                      />
+                    ) : (
+                      <div className="text-muted">Image</div>
+                    )}
+                    {msg.body && (
+                      <div
+                        className="text-sm mt-1"
+                        style={{ whiteSpace: "pre-wrap" }}
+                      >
+                        {msg.body}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {msg.type === "video" && (
+                  <div>
+                    {msg.media_url ? (
+                      <video
+                        controls
+                        className="img-fluid rounded mb-1"
+                        src={msg.media_url}
+                      />
+                    ) : (
+                      <div className="text-muted">Video</div>
+                    )}
+                    {msg.body && (
+                      <div
+                        className="text-sm mt-1"
+                        style={{ whiteSpace: "pre-wrap" }}
+                      >
+                        {msg.body}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {msg.type === "audio" && (
+                  <div>
+                    {msg.media_url ? (
+                      <audio controls src={msg.media_url} />
+                    ) : (
+                      <div className="text-muted">Audio</div>
+                    )}
+                    {msg.body && (
+                      <div
+                        className="text-sm mt-1"
+                        style={{ whiteSpace: "pre-wrap" }}
+                      >
+                        {msg.body}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {msg.type === "document" && (
+                  <div className="d-flex align-items-center">
+                    <i className="far fa-file mr-2" />
+                    {msg.media_url ? (
+                      <a href={msg.media_url} target="_blank" rel="noreferrer">
+                        {msg.file_name || "Document"}
+                      </a>
+                    ) : (
+                      <span>{msg.file_name || "Document"}</span>
+                    )}
+                  </div>
+                )}
+                <div className="chat-meta">
                   {msg.created_at && (
                     <span className="mr-2">
                       {formatTimeLabel(msg.created_at)}
@@ -90,6 +195,8 @@ export default function ChatContent({ messages }) {
               </div>
             </div>
           ))}
+          {/* Bottom anchor to auto-scroll */}
+          <div ref={bottomRef} />
         </div>
       ))}
     </div>

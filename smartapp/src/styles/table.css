@@ -1,56 +1,74 @@
 /* Professional Bootstrap Table Theme */
 .table-custom {
-    background-color: #ffffff;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    overflow: hidden;
-    font-size: 14px;
+	background-color: var(--surface);
+	border-collapse: separate;
+	border-spacing: 0;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	overflow: hidden;
+	font-size: 14px;
+	box-shadow: var(--shadow-sm);
 }
 
 .table-custom thead {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #495057;
+	background-color: #f8fafc;
+	font-weight: 600;
+	color: #334155;
+	border-bottom: 1px solid var(--border);
 }
 
 .table-custom thead th {
-    border-bottom: 2px  #fefefe;
-    padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--border);
+	padding: 0.9rem 1rem;
 }
 
 .table-custom tbody tr {
-    transition: background-color 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out;
 }
 
 .table-custom tbody tr:nth-child(even) {
-    background-color: #fdfdfd;
+	background-color: #fbfdff;
 }
 
 .table-custom tbody tr:hover {
-    background-color: #f1f3f5;
+	background-color: #f7fbff;
 }
 
 .table-custom td {
-    padding: 0.75rem 1rem;
-    vertical-align: middle;
-    border-bottom: 1px  #fbfcfd;
+	padding: 0.9rem 1rem;
+	vertical-align: middle;
+	border-bottom: 1px solid var(--border);
 }
 
 .table-custom th {
-    padding: 0.75rem 1rem;
-    vertical-align: middle;
+	padding: 0.9rem 1rem;
+	vertical-align: middle;
 }
 
 .table-custom .table-primary {
-    background-color: #e9f5ff;
+	background-color: #e9f5ff;
 }
 
 .table-custom .table-danger {
-    background-color: #fff5f5;
+	background-color: #fff5f5;
 }
 
 .table-custom .table-success {
-    background-color: #f4fff7;
+	background-color: #f4fff7;
+}
+
+/* Table toolbar helpers */
+.table-toolbar {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.table-actions .btn {
+	padding: 6px 10px;
+	border-radius: 8px;
+}
+
+.table-actions .btn + .btn {
+	margin-left: 6px;
 }

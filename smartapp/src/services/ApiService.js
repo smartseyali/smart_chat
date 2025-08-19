@@ -1,7 +1,7 @@
 import axios from "axios";
 import { database } from "./SupabaseService";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import store from "../store";
 
 const API_BASE_URL = import.meta.env.VITE_WHATSAPP_API_URL;
 
@@ -10,21 +10,10 @@ let cachedToken = null; // Store token in memory to avoid fetching every time
 // Function to fetch and cache token from Supabase
 async function fetchToken() {
   if (cachedToken) return cachedToken;
-
   try {
-    database
-      .get("waba_accounts", { status: "active" })
-      .then((data) => {
-        cachedToken = data[0]?.access_token || null;
-        return cachedToken;
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: error.message,
-          icon: "error",
-        });
-      });
+    const data = await database.get("waba_accounts", { status: "active" });
+    cachedToken = data?.[0]?.access_token || null;
+    return cachedToken;
   } catch (error) {
     Swal.fire({
       title: "Error!",
@@ -46,8 +35,24 @@ const apiService = axios.create({
 // Request interceptor
 apiService.interceptors.request.use(
   async (config) => {
-    const { access_token } = useSelector((state) => state.auth);
-    const token = access_token ? access_token : await fetchToken();
+    const stateToken = store.getState()?.auth?.access_token;
+    const localToken =
+      stateToken ||
+      cachedToken ||
+      // fallback to localStorage if you persist auth there
+      (() => {
+        try {
+          const stored = localStorage.getItem("auth");
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            return parsed?.access_token || null;
+          }
+        } catch (_) {
+          // ignore
+        }
+        return null;
+      })();
+    const token = localToken || (await fetchToken());
     config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
@@ -70,6 +75,11 @@ apiService.interceptors.response.use(
 export default {
   get: (url, params) => apiService.get(url, { params }),
   post: (url, data) => apiService.post(url, data),
+  // For file uploads (multipart/form-data)
+  postForm: (url, formData) =>
+    apiService.post(url, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
   put: (url, data) => apiService.put(url, data),
   delete: (url) => apiService.delete(url),
 };

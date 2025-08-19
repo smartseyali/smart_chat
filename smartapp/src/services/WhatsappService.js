@@ -24,6 +24,52 @@ export async function sendWhatsappMessage(phoneNumberId, messageData) {
 }
 
 /**
+ * Upload media to WhatsApp Cloud API
+ * Returns an object with id of uploaded media
+ * @param {string} phoneNumberId
+ * @param {File|Blob} file
+ * @param {string} [typeHint] optional MIME override
+ */
+export async function uploadWhatsappMedia(phoneNumberId, file, typeHint) {
+  try {
+    const formData = new FormData();
+    formData.append("messaging_product", "whatsapp");
+    formData.append("file", file);
+    if (typeHint) formData.append("type", typeHint);
+    const response = await ApiService.postForm(
+      `${phoneNumberId}/media`,
+      formData
+    );
+    return response.data; // { id }
+  } catch (error) {
+    Swal.fire({
+      title: "Error!",
+      text: error.response?.data?.error?.message || error.message,
+      icon: "error",
+    });
+    return null;
+  }
+}
+
+/**
+ * Get media metadata (e.g., URL) by media id
+ * @param {string} mediaId
+ */
+export async function getWhatsappMedia(mediaId) {
+  try {
+    const response = await ApiService.get(`${mediaId}`);
+    return response.data;
+  } catch (error) {
+    Swal.fire({
+      title: "Error!",
+      text: error.response?.data?.error?.message || error.message,
+      icon: "error",
+    });
+    return null;
+  }
+}
+
+/**
  * Create a Message template using Cloud API
  * @param {string} wabaId - The WhatsApp Business Account ID
  * @param {object} templateData - The message payload (see WhatsApp Cloud API docs)

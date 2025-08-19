@@ -1,0 +1,214 @@
+/*
+  Modern UI overrides inspired by Zoho aesthetics
+  - Keeps existing brand colors
+  - Soft surfaces, subtle borders, generous spacing, rounded corners
+*/
+
+:root {
+  --brand-primary: #093e53; /* sidebar base */
+  --brand-accent: #075e54;  /* action/whatsapp */
+  --brand-link: #407ee7;    /* links */
+
+  --surface: #ffffff;
+  --surface-2: #f6f8fb;
+  --border: #e7eef5;
+  --text: #1f2a37;
+  --text-muted: #6b7280;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 6px 20px rgba(16, 24, 40, 0.08);
+}
+
+body {
+  background-color: var(--surface-2);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout scaffolding */
+.wrapper .content-wrapper {
+  background-color: var(--surface-2);
+}
+
+.content-wrapper {
+  padding: 16px 16px 24px 16px;
+}
+
+/* Header (top navbar) */
+.main-header.navbar {
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  height: 60px;
+}
+
+.main-header .nav-link {
+  color: var(--text);
+}
+
+.navbar-badge {
+  font-weight: 600;
+}
+
+/* Sidebar */
+.main-sidebar {
+  background: var(--brand-primary);
+}
+
+.brand-link {
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.brand-text {
+  letter-spacing: 0.2px;
+}
+
+.nav-sidebar .nav-item .nav-link {
+  border-radius: var(--radius-sm);
+  margin: 6px 10px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nav-sidebar .nav-item .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-sidebar .nav-item .nav-link.active,
+.nav-sidebar .menu-open > .nav-link {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Cards */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card .card-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.card .card-title {
+  font-weight: 600;
+}
+
+/* Tables */
+table.table, .table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.table thead th {
+  background: #f8fafc;
+  color: #334155;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.table tbody tr:hover {
+  background-color: #f7fbff;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--brand-accent);
+  border-color: var(--brand-accent);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 2px rgba(7, 94, 84, 0.22);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.btn-outline-primary {
+  color: var(--brand-accent);
+  border-color: var(--brand-accent);
+  border-radius: var(--radius-md);
+}
+
+.btn-light {
+  background: #f3f6fb;
+  border-color: var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* Forms */
+.form-control, .custom-select, .custom-file-input ~ .custom-file-label {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.form-control:focus, .custom-select:focus {
+  border-color: #b6d3ff;
+  box-shadow: 0 0 0 3px rgba(64, 126, 231, 0.15);
+}
+
+label {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Pills / Tabs */
+.nav-pills .nav-link {
+  border-radius: var(--radius-md);
+}
+
+.nav-pills .nav-link.active {
+  background: var(--brand-accent);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+/* Badges */
+.badge-primary {
+  background: var(--brand-accent);
+}
+
+/* Alerts */
+.alert {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+/* Chat bubbles (respect existing palette) */
+.direct-chat-text {
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.direct-chat-msg.right .direct-chat-text {
+  background-color: #e1f7d6 !important;
+}
+
+/* Utilities */
+.elevation-1 { box-shadow: var(--shadow-sm) !important; }
+.elevation-2 { box-shadow: var(--shadow-md) !important; }
+
+/* Footer */
+.main-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+
