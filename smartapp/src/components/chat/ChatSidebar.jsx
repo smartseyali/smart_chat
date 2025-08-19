@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-export default function ChatSidebar({ onSelectContact, conversation }) {
+export default function ChatSidebar({
+  onSelectContact,
+  conversation,
+  phoneNumbers = [],
+  selectedPhoneNumberId,
+  onChangePhoneNumber,
+}) {
   const [search, setSearch] = useState("");
 
   // const filteredContacts = conversation.filter((c) =>
@@ -9,6 +15,35 @@ export default function ChatSidebar({ onSelectContact, conversation }) {
   return (
     <div className="card direct-chat direct-chat-primary h-100">
       <div className="card-header">
+        <div className="d-flex align-items-center justify-content-between">
+          <div className="d-flex align-items-center">
+            <i className="fab fa-whatsapp text-success mr-2" />
+            <strong>WhatsApp</strong>
+          </div>
+          <div className="d-flex align-items-center">
+            <select
+              className="form-control form-control-sm"
+              style={{ maxWidth: 220 }}
+              value={selectedPhoneNumberId || ""}
+              onChange={(e) =>
+                onChangePhoneNumber && onChangePhoneNumber(e.target.value)
+              }
+            >
+              {(phoneNumbers || []).map((n) => {
+                const id = n.phone_number_id || n.id;
+                const label = n.display_phone_number || n.phone_number || id;
+                return (
+                  <option key={id} value={id}>
+                    {label}
+                  </option>
+                );
+              })}
+            </select>
+            <button className="btn btn-sm btn-light ml-2" title="Change number">
+              <i className="fas fa-exchange-alt"></i>
+            </button>
+          </div>
+        </div>
         <div className="input-group mt-2">
           <input
             type="text"

@@ -137,7 +137,7 @@ serve(async (req) => {
               wa_message_id: message.id,
               type: message.type || "unknown",
               status: "received",
-              body: message.text?.body || null,
+              body: message.text?.body || message.button?.text || null,
               payload: value,
             },
             { onConflict: "wa_message_id" },

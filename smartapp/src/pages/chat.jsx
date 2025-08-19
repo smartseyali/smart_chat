@@ -20,6 +20,9 @@ export default function ChatPage() {
     createConversationForNumber,
     handleSelectedConv,
     handleSendTemplate,
+    phoneNumbers,
+    selectedPhoneNumberId,
+    setSelectedPhoneNumberId,
   } = useChat();
 
   const { templates, fetchTemplates } = useTemplates();
@@ -62,6 +65,9 @@ export default function ChatPage() {
             <ChatSidebar
               onSelectContact={handleSelectedConv}
               conversation={conversation}
+              phoneNumbers={phoneNumbers}
+              selectedPhoneNumberId={selectedPhoneNumberId}
+              onChangePhoneNumber={setSelectedPhoneNumberId}
             />
           </div>
           <div className="col-md-9 d-flex flex-column p-0">

@@ -14,13 +14,48 @@ const useChat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [showContactInfo, setShowContactInfo] = useState(false);
   const [pendingFiles, setPendingFiles] = useState([]);
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [selectedPhoneNumberId, setSelectedPhoneNumberId] = useState(null);
 
-  // Fetch and subscribe to conversations
+  // Resolve active org, load phone numbers and set selected number
   useEffect(() => {
+    async function initPhoneNumbers() {
+      try {
+        const wabas = await database.get("waba_accounts", { status: "active" });
+        const active = wabas && wabas.length > 0 ? wabas[0] : null;
+        const orgId = active?.org_id || null;
+        if (!orgId) return;
+        const list = await database.get("whatsapp_phone_numbers", {
+          org_id: orgId,
+        });
+        setPhoneNumbers(list || []);
+        // prefer stored selection per org
+        const storageKey = `selectedPhoneNumberId:${orgId}`;
+        const stored = window.localStorage.getItem(storageKey);
+        let initial = null;
+        if (stored) initial = stored;
+        if (!initial && list && list.length > 0) {
+          // Use phone_number_id field if present, else id
+          initial = list[0].phone_number_id || list[0].id;
+        }
+        if (initial) {
+          setSelectedPhoneNumberId(initial);
+        }
+      } catch {}
+    }
+    initPhoneNumbers();
+  }, []);
+
+  // Fetch and subscribe to conversations scoped by selected phone number
+  useEffect(() => {
+    if (!selectedPhoneNumberId) return;
     const fetchConversations = async () => {
       const data = await database.getConversations();
+      const filtered = (data || []).filter(
+        (c) => String(c.phone_number_id) === String(selectedPhoneNumberId)
+      );
       setConversation(
-        data.sort(
+        filtered.sort(
           (a, b) =>
             new Date(b.last_message_time) - new Date(a.last_message_time)
         )
@@ -29,14 +64,18 @@ const useChat = () => {
 
     fetchConversations();
 
-    const convChannel = database.subscribe("conversations", null, () => {
-      fetchConversations();
-    });
+    const convChannel = database.subscribe(
+      "conversations",
+      { filter: `phone_number_id=eq.${selectedPhoneNumberId}` },
+      () => {
+        fetchConversations();
+      }
+    );
 
     return () => {
       database.unsubscribe(convChannel);
     };
-  }, []);
+  }, [selectedPhoneNumberId]);
 
   // Fetch and subscribe to messages of the selected conversation
   useEffect(() => {
@@ -91,7 +130,10 @@ const useChat = () => {
         type: "text",
         text: { body: textToSend },
       };
-      const resp = await sendWhatsappMessage("685001508038397", messageData);
+      const resp = await sendWhatsappMessage(
+        selectedConv.phone_number_id || selectedPhoneNumberId,
+        messageData
+      );
       if (resp) {
         await database.post("messages", {
           conversation_id: selectedConv.id,
@@ -116,7 +158,11 @@ const useChat = () => {
       else if (mime.startsWith("video/")) waType = "video";
       else if (mime.startsWith("audio/")) waType = "audio";
 
-      const upload = await uploadWhatsappMedia("685001508038397", file, mime);
+      const upload = await uploadWhatsappMedia(
+        selectedConv.phone_number_id || selectedPhoneNumberId,
+        file,
+        mime
+      );
       if (!upload?.id) continue;
 
       const messageData = {
@@ -133,7 +179,10 @@ const useChat = () => {
         },
       };
 
-      const resp = await sendWhatsappMessage("685001508038397", messageData);
+      const resp = await sendWhatsappMessage(
+        selectedConv.phone_number_id || selectedPhoneNumberId,
+        messageData
+      );
       if (resp) {
         await database.post("messages", {
           conversation_id: selectedConv.id,
@@ -173,7 +222,8 @@ const useChat = () => {
         if (wabas && wabas.length > 0) orgId = wabas[0].org_id;
       }
       if (!phoneNumberId) {
-        phoneNumberId = "685001508038397"; // use configured phone number id
+        // Use selected header number
+        phoneNumberId = selectedPhoneNumberId;
       }
       if (!orgId || !phoneNumberId) {
         Swal.fire({
@@ -278,7 +328,7 @@ const useChat = () => {
         return null;
       }
       const orgId = wabas[0].org_id;
-      const phoneNumberId = "685001508038397"; // Using current configured phone number id
+      const phoneNumberId = selectedPhoneNumberId; // Using selected phone number id
 
       // Find or create contact
       let contacts = await database.get("contacts", { phone, org_id: orgId });
@@ -395,7 +445,7 @@ const useChat = () => {
         // Upload media and reference it
         const mediaFile = params.headerMedia;
         const upload = await uploadWhatsappMedia(
-          "685001508038397",
+          selectedConv.phone_number_id || selectedPhoneNumberId,
           mediaFile,
           mediaFile.type
         );
@@ -500,7 +550,10 @@ const useChat = () => {
         };
       });
 
-      const resp = await sendWhatsappMessage("685001508038397", messageData);
+      const resp = await sendWhatsappMessage(
+        selectedConv.phone_number_id || selectedPhoneNumberId,
+        messageData
+      );
       if (resp) {
         await database.post("messages", {
           conversation_id: selectedConv.id,
@@ -546,6 +599,16 @@ const useChat = () => {
     handleSelectedConv: setSelectedConv,
     handleTabSwitch: setActiveTab,
     handleSendTemplate,
+    phoneNumbers,
+    selectedPhoneNumberId,
+    setSelectedPhoneNumberId: (val) => {
+      setSelectedPhoneNumberId(val);
+      try {
+        const orgId = conversation?.[0]?.org_id || null;
+        if (orgId)
+          window.localStorage.setItem(`selectedPhoneNumberId:${orgId}`, val);
+      } catch {}
+    },
   };
 };
 
