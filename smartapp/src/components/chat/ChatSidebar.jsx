@@ -34,7 +34,9 @@ export default function ChatSidebar({ onSelectContact, conversation }) {
       >
         <ul className="contacts-list list-unstyled ml-2 mr-2 ">
           {conversation.map((contact) => {
-            const firstChar = contact.contact_name.charAt(0).toUpperCase();
+            const displayName =
+              (contact && (contact.contact_name || contact.phone)) || "Unknown";
+            const firstChar = String(displayName).charAt(0).toUpperCase();
             return (
               <li
                 key={contact.id}
@@ -57,7 +59,7 @@ export default function ChatSidebar({ onSelectContact, conversation }) {
                 </div>
                 <div>
                   <span className="text-bold text-secondary">
-                    {contact.contact_name}
+                    {displayName}
                   </span>
                   <br />
                   <small className="text-muted">{contact.last_message}</small>

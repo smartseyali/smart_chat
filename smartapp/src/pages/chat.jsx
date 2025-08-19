@@ -17,6 +17,7 @@ export default function ChatPage() {
     pendingFiles,
     setPendingFiles,
     handleSendMessage,
+    createConversationForNumber,
     handleSelectedConv,
     handleSendTemplate,
   } = useChat();
@@ -25,6 +26,8 @@ export default function ChatPage() {
   const [showTpl, setShowTpl] = React.useState(false);
   const [previewTpl, setPreviewTpl] = React.useState(null);
   const [tplParams, setTplParams] = React.useState({ header: [], body: [] });
+  const [showNewChat, setShowNewChat] = React.useState(false);
+  const [newChat, setNewChat] = React.useState({ phone: "", name: "" });
 
   return (
     <div className="col-md-12">
@@ -38,6 +41,14 @@ export default function ChatPage() {
             <i className="fas fa-comments mr-2" /> Chat
           </h5>
           <div className="card-tools ml-auto">
+            <button
+              className="btn btn-sm btn-primary mr-2"
+              onClick={() => setShowNewChat(true)}
+              title="Start a new chat"
+            >
+              <i className="fas fa-user-plus mr-1"></i>
+              New Chat
+            </button>
             <button
               className="btn btn-tool bg-pearl"
               data-card-widget="maximize"
@@ -685,6 +696,79 @@ export default function ChatPage() {
                   onClick={() => setShowTpl(false)}
                 >
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Chat modal */}
+      {showNewChat && (
+        <div className="modal fade show" style={{ display: "block" }}>
+          <div className="modal-dialog" style={{ maxWidth: 520 }}>
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Start New Chat</h5>
+                <button
+                  type="button"
+                  className="close"
+                  onClick={() => setShowNewChat(false)}
+                >
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>Mobile Number</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    placeholder="e.g. 15551234567"
+                    value={newChat.phone}
+                    onChange={(e) =>
+                      setNewChat((p) => ({ ...p, phone: e.target.value }))
+                    }
+                  />
+                  <small className="form-text text-muted">
+                    Include country code, numbers only.
+                  </small>
+                </div>
+                <div className="form-group">
+                  <label>Contact Name (optional)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Name"
+                    value={newChat.name}
+                    onChange={(e) =>
+                      setNewChat((p) => ({ ...p, name: e.target.value }))
+                    }
+                  />
+                </div>
+                {/* Message input removed: add-only flow */}
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn btn-light"
+                  onClick={() => setShowNewChat(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={async () => {
+                    const phone = (newChat.phone || "").replace(/\D/g, "");
+                    if (!phone) return;
+                    await createConversationForNumber(
+                      phone,
+                      newChat.name || ""
+                    );
+                    setShowNewChat(false);
+                    setNewChat({ phone: "", name: "" });
+                  }}
+                >
+                  Add
                 </button>
               </div>
             </div>
