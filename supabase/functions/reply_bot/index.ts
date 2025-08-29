@@ -14,17 +14,22 @@ serve(async (req) => {
     // 1. Find matching auto reply rule
     const { data: rules, error: rulesError } = await supabase
       .from("auto_reply_rules")
-      .select("id, template_id")
+      .select("id, template_id,match_text")
       .eq("org_id", org_id)
       .eq("enabled", true);
 
     if (rulesError) throw rulesError;
 
+    const text = typeof body === "string" ? body.toLowerCase() : "";
+
     const rule = rules.find((r: any) =>
-      body.toLowerCase().includes(r.match_text.toLowerCase())
+      r?.match_text ? text.includes(r.match_text.toLowerCase()) : false
     );
+
     if (!rule) {
-      return new Response("No matching rule", { status: 200 });
+      return new Response(`No matching rule for ${body} ${text}`, {
+        status: 200,
+      });
     }
 
     // 2. Fetch template + WABA account + phone number

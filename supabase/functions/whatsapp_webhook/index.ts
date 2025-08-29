@@ -142,6 +142,32 @@ serve(async (req) => {
             },
             { onConflict: "wa_message_id" },
           );
+          if (contact?.wa_id && message.text?.body) {
+            try {
+              const replyRes = await fetch(
+                `${Deno.env.get("SUPABASE_URL")}/functions/v1/reply_bot`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${
+                      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+                    }`, // service role for internal call
+                  },
+                  body: JSON.stringify({
+                    org_id: orgId,
+                    contact_id: contactId,
+                    body: message.text?.body || message.button?.text || null,
+                  }),
+                },
+              );
+
+              const replyBody = await replyRes.text();
+              console.log("Reply bot response:", replyRes.status, replyBody);
+            } catch (err) {
+              console.error("Error calling reply_bot:", err);
+            }
+          }
         }
       }
 

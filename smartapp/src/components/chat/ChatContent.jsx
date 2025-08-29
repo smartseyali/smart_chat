@@ -73,7 +73,9 @@ export default function ChatContent({ messages }) {
                 } p-2`}
               >
                 {/* Content by type */}
-                {(!msg.type || msg.type === "text") && (
+                {(!msg.type ||
+                  msg.type === "text" ||
+                  msg.type === "button") && (
                   <div className="text-sm" style={{ whiteSpace: "pre-wrap" }}>
                     {msg.body}
                   </div>
