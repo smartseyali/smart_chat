@@ -80,39 +80,56 @@ export default function ChatContent({ messages }) {
                     {msg.body}
                   </div>
                 )}
-                {msg.type === "template" && (
+                {msg.type === "template" && Array.isArray(msg.payload) && (
                   <div>
-                    <div className="text-sm" style={{ whiteSpace: "pre-wrap" }}>
-                      {msg.payload?.template_preview?.bodyText || msg.body}
-                    </div>
-                    {msg.payload?.template_preview?.footerText && (
+                    {/* HEADER */}
+                    {msg.payload?.find((p) => p.type === "HEADER")?.text && (
+                      <div className="fw-bold text-base mb-1">
+                        {msg.payload.find((p) => p.type === "HEADER").text}
+                      </div>
+                    )}
+
+                    {/* BODY */}
+                    {msg.payload?.find((p) => p.type === "BODY")?.text && (
+                      <div
+                        className="text-sm"
+                        style={{ whiteSpace: "pre-wrap" }}
+                      >
+                        {msg.payload.find((p) => p.type === "BODY").text}
+                      </div>
+                    )}
+
+                    {/* FOOTER */}
+                    {msg.payload?.find((p) => p.type === "FOOTER")?.text && (
                       <small className="text-muted d-block mt-1">
-                        {msg.payload.template_preview.footerText}
+                        {msg.payload.find((p) => p.type === "FOOTER").text}
                       </small>
                     )}
-                    {Array.isArray(msg.payload?.template_preview?.buttons) &&
-                      msg.payload.template_preview.buttons.length > 0 && (
-                        <div className="mt-2">
-                          {msg.payload.template_preview.buttons.map(
-                            (btn, i) => (
-                              <button
-                                key={i}
-                                type="button"
-                                className={`btn btn-xs ${
-                                  btn.type === "URL"
-                                    ? "btn-outline-primary"
-                                    : btn.type === "PHONE_NUMBER"
-                                    ? "btn-outline-success"
-                                    : "btn-light"
-                                } mr-2`}
-                                disabled
-                              >
-                                {btn.text}
-                              </button>
-                            )
-                          )}
-                        </div>
-                      )}
+
+                    {/* BUTTONS */}
+                    {msg.payload?.find((p) => p.type === "BUTTONS")?.buttons
+                      ?.length > 0 && (
+                      <div className="mt-2">
+                        {msg.payload
+                          .find((p) => p.type === "BUTTONS")
+                          .buttons.map((btn, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              className={`btn btn-xs ${
+                                btn.type === "URL"
+                                  ? "btn-outline-primary"
+                                  : btn.type === "PHONE_NUMBER"
+                                  ? "btn-outline-success"
+                                  : "btn-light"
+                              } mr-2`}
+                              disabled
+                            >
+                              {btn.text}
+                            </button>
+                          ))}
+                      </div>
+                    )}
                   </div>
                 )}
                 {msg.type === "image" && (
